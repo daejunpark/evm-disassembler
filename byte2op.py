@@ -149,7 +149,7 @@ def push_bytes(h, mode):
     }[mode]
 
 def pc(cnt, size):
-    return '[' + str(cnt).zfill(size) + '] '
+    return '[' + str(cnt).zfill(size) + ']'
 
 # Decode ByteCodes to Opcodes
 def decode(hexcode, mode):
@@ -168,14 +168,14 @@ def decode(hexcode, mode):
                 o += push_bytes(h, mode) + '\n'
                 h = ''
         elif isinstance(item, str) and item.lower() in opcodes:
-            o += pc(cnt, size) + opcodes[item.lower()]
+            o += pc(cnt, size) + ' ' + item.lower() + ' ' + opcodes[item.lower()]
             if int('60', 16) <= int(item, 16) <= int('7f', 16):
                 pushcnt = int(item, 16) - int('60', 16) + 1
                 o += ' '
             else:
                 o += '\n'
         else:
-            o += pc(cnt, size) + 'ERROR ' + item.lower() + '\n'
+            o += pc(cnt, size) + ' ' + item.lower() + ' ERROR\n'
 #           raise Exception("Invalid opcode: " + str(item))
     if h:
         o += 'ERROR ' + push_bytes(h, mode) + ' (' + str(pushcnt) + ' bytes missed)\n'
