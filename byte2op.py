@@ -1,5 +1,7 @@
 #!/usr/bin/env python3.6
 
+import sys
+
 opcodes = {
     '00' : 'STOP',
     '01' : 'ADD',
@@ -138,12 +140,22 @@ opcodes = {
 #   'ff' : 'SELFDESTRUCT',
 }
 
+def push_bytes(h, mode):
+    i = str(int(h, 16))
+    return {
+        'hex'     :           '0x' + h  ,
+        'int'     : i                   ,
+        'int:hex' : i + ':' + '0x' + h  ,
+    }[mode]
+
+def pc(cnt, size):
+    return '[' + str(cnt).zfill(size) + '] '
+
 # Decode ByteCodes to Opcodes
-def decode(hexcode):
+def decode(hexcode, mode):
+    size = len(str(len(hexcode)))
     h = ''
-    oh  = ''
-    oi  = ''
-    oih = ''
+    o = ''
     pushcnt = 0
     cnt = -1
     for item in hexcode:
@@ -153,24 +165,25 @@ def decode(hexcode):
             pushcnt -= 1
             if pushcnt == 0:
                 i = str(int(h, 16))
-                oh  +=           '0x' + h + ' '
-                oi  += i + ' '
-                oih += i + ':' + '0x' + h + ' '
+                o += push_bytes(h, mode) + '\n'
                 h = ''
         elif isinstance(item, str) and item.lower() in opcodes:
-            o = '[' + str(cnt) + '] ' + opcodes[item.lower()] + ' '
-            oh  += o
-            oi  += o
-            oih += o
+            o += pc(cnt, size) + opcodes[item.lower()]
             if int('60', 16) <= int(item, 16) <= int('7f', 16):
                 pushcnt = int(item, 16) - int('60', 16) + 1
+                o += ' '
+            else:
+                o += '\n'
         else:
-            print(oih)
-            raise Exception("Invalid opcode: " + str(item))
-    return oh.strip(), oi.strip(), oih.strip()
+            o += pc(cnt, size) + 'ERROR ' + item.lower() + '\n'
+#           raise Exception("Invalid opcode: " + str(item))
+    if h:
+        o += 'ERROR ' + push_bytes(h, mode) + ' (' + str(pushcnt) + ' bytes missed)\n'
+#       raise Exception("Not enough push bytes: " + h)
+    return o.strip()
 
-hexcode=input()
-oh, oi, oih = decode([hexcode[i:i+2] for i in range(2, len(hexcode), 2)])
-#print(oi)
-#print(oh)
-print(oih)
+# usage: <cmd> [int|hex|int:hex]
+if __name__ == '__main__':
+    mode = 'int:hex' if len(sys.argv) < 2 else sys.argv[1]
+    hexcode=input()
+    print(decode([hexcode[i:i+2] for i in range(2, len(hexcode), 2)], mode))
