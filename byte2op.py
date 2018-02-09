@@ -1,3 +1,5 @@
+#!/usr/bin/env python3.6
+
 opcodes = {
     '00' : 'STOP',
     '01' : 'ADD',
