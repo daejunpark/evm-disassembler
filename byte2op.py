@@ -29,7 +29,7 @@ opcodes = {
     '1b' : 'SHL',
     '1c' : 'SHR',
     '1d' : 'SAR',
-    '20' : 'SHA3',
+    '20' : 'KECCAK256',
     '30' : 'ADDRESS',
     '31' : 'BALANCE',
     '32' : 'ORIGIN',
