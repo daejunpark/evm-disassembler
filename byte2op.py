@@ -22,7 +22,7 @@ opcodes = {
     '14' : 'EQ',
     '15' : 'ISZERO',
     '16' : 'AND',
-    '17' : 'OR', # 'EVMOR'
+    '17' : 'OR',
     '18' : 'XOR',
     '19' : 'NOT',
     '1a' : 'BYTE',
@@ -64,6 +64,10 @@ opcodes = {
     '59' : 'MSIZE',
     '5a' : 'GAS',
     '5b' : 'JUMPDEST',
+    '5c' : 'TLOAD',
+    '5d' : 'TSTORE',
+    '5e' : 'MCOPY',
+    '5f' : 'PUSH0',
     '60' : 'PUSH1',
     '61' : 'PUSH2',
     '62' : 'PUSH3',
@@ -143,7 +147,6 @@ opcodes = {
     'fd' : 'REVERT',
     'fe' : 'INVALID',
     'ff' : 'SELFDESTRUCT',
-#   'ff' : 'SUICIDE',
 }
 
 def push_bytes(h, mode):
